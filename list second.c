@@ -1,39 +1,53 @@
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include <stdlib.h>
 
-int isKeyword(char word[]) {
-    char keywords[5][10] = {"int", "float", "if", "else", "while"};
-    for (int i = 0; i < 5; i++) {
-        if (strcmp(word, keywords[i]) == 0)
-            return 1;
-    }
-    return 0;
+// Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+// Insert at beginning
+void insert(int value) {
+    struct Node* newNode = malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = head;
+    head = newNode;
 }
 
-int main() {
-    char str[100] = "int a = b + 5;";
-    char word[20];
-    int i = 0, j = 0;
-
-    while (str[i] != '\0') {
-        if (isalnum(str[i])) {
-            word[j++] = str[i];
-        } else {
-            word[j] = '\0';
-            j = 0;
-            if (strlen(word) > 0) {
-                if (isKeyword(word))
-                    printf("Keyword: %s\n", word);
-                else
-                    printf("Identifier: %s\n", word);
-            }
-
-            if (str[i] == '+' || str[i] == '-' || str[i] == '=')
-                printf("Operator: %c\n", str[i]);
-        }
-        i++;
+// Delete first node
+void deleteFirst() {
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
     }
+    struct Node* temp = head;
+    head = head->next;
+    free(temp);
+}
+
+// Display all elements
+void display() {
+    struct Node* temp = head;
+    printf("List: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+// Main function
+int main() {
+    insert(10);
+    insert(20);
+    insert(30);  // List: 30 20 10
+    display();
+
+    deleteFirst();  // Deletes 30
+    display();      // List: 20 10
 
     return 0;
 }
